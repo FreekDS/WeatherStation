@@ -1,18 +1,33 @@
 #include <Arduino.h>
+#include <taskmanager.h>
 
-// put function declarations here:
-int myFunction(int, int);
+// Fwd declarations
+void blink();
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+TaskManager tasks{100, &blink};
+
+
+void setup()
+{
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop()
+{
+  tasks.tick();
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+void blink() {
+  digitalWrite(LED_BUILTIN, HIGH);
+
+  delay(300);
+
+  for (int i = 0; i < 20; i++)
+  {
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(100);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100);
+  }
+  digitalWrite(LED_BUILTIN, LOW);
 }
