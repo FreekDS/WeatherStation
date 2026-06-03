@@ -1,21 +1,27 @@
 #include <taskmanager.h>
 
-TaskManager::TaskManager(uint16_t tickRate, Task func) : m_tickRate{tickRate}, m_func{func}
-{
-    m_lastTick = millis();
-}
+#include <util.h>
 
-auto TaskManager::tick() -> void
+TaskManager::TaskManager(TaskBufferAccessor bufferAccessor) : m_taskBufferAccessor{mystd::move(bufferAccessor)} {}
+
+auto TaskManager::update() -> void
 {
     auto ms = millis();
-    if (ms - m_lastTick < m_tickRate)
-        return;
 
-    m_lastTick = ms;
-    m_func();
+    for (auto &[task, taskTickRate, lastTick] : m_taskBufferAccessor)
+    {
+        if (!task)
+            continue;
+
+        if (ms - lastTick >= taskTickRate)
+        {
+            task();
+            lastTick = ms;
+        }
+    }
 }
 
 auto TaskManager::registerTask(Task func, uint16_t tickRate) -> bool
 {
-    return true;
+    return m_taskBufferAccessor.insert(func, tickRate);
 }

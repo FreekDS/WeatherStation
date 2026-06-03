@@ -3,30 +3,23 @@
 
 #include <Arduino.h>
 
+#include <taskbuffer.h>
 
 class TaskManager
 {
 public:
-    using Task = void (*)();
+    explicit TaskManager(TaskBufferAccessor bufferAccessor);
 
-    explicit TaskManager(uint16_t tickRate, Task func);
+    // Avoid temporaries to be passed in.
+    template<size_t N>
+    explicit TaskManager(TaskBuffer<N>&&) = delete;
 
-    void tick();
+    void update();
 
     auto registerTask(Task func, uint16_t tickRate) -> bool;
 
 private:
-
-    struct TaskInfo{
-        Task m_task;
-        uint16_t m_tickRate;
-    };
-
-
-    const uint16_t m_tickRate{100};
-    Task m_func;
-
-    unsigned long m_lastTick{0};
+    TaskBufferAccessor m_taskBufferAccessor;
 };
 
 #endif // TASKMANAGER_H
