@@ -12,6 +12,6 @@ public:
     void fillData(DataPoint *dataPoints) const;
 };
 
-#include "src/UVSensor_impl.h"
+#include "src/UVSensor_impl.inl"
 
 #endif // UV_SENSOR_H

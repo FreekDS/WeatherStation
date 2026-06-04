@@ -10,6 +10,6 @@ public:
     void fillData(DataPoint *dataPoints) const;
 };
 
-#include "src/SoilMoistureSensor_impl.h"
+#include "src/SoilMoistureSensor_impl.inl"
 
 #endif // SOIL_MOISTURE_SENSOR_H
