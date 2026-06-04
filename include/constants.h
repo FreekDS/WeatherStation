@@ -9,7 +9,7 @@ static constexpr uint8_t PIN_SENSOR_GROUND_HUMIDITY = A1;
 
 
 // I2C addresses
-static constexpr unsigned int ADDR_SENSOR_BME = 0x77;
+static constexpr unsigned int ADDR_SENSOR_BME = 0x76;
 static constexpr unsigned int ADDR_SENSOR_LIGHT = 0x23;
 
 

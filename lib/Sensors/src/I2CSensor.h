@@ -2,11 +2,20 @@
 #define I2C_SENSOR_H
 
 #include "Sensor.h"
+#include <util.h>
 
-template<typename TDerived, uint8_t I2CAddress>
+template <typename TDerived, uint8_t I2CAddress>
 class I2CSensor : public SensorBase<TDerived>
 {
- protected:
+public:
+    bool begin() const
+    {
+        static_assert(&SensorBase<TDerived>::begin != nullptr);
+        return static_cast<const TDerived &>(*this).begin();
+    }
+    bool stop() const { return static_cast<const TDerived &>(*this).stop(); }
+
+protected:
     uint8_t m_address = I2CAddress;
 };
 

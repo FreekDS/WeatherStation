@@ -9,10 +9,12 @@
 #include <SoilMoistureSensor.h>
 #include <UVSensor.h>
 #include <BMESensor.h>
+#include <LightSensor.h>
 
 SoilMoistureSensor<PIN_SENSOR_GROUND_HUMIDITY> soilSensor;
 UVSensor<PIN_SENSOR_UV> uvSensor;
 BMESensor<ADDR_SENSOR_BME> bmeSensor;
+LightSensor<ADDR_SENSOR_LIGHT> lightSensor;
 
 template <typename TImpl>
 void printSensorData(SensorBase<TImpl>& sensor) {
@@ -25,6 +27,7 @@ void printSensorData(SensorBase<TImpl>& sensor) {
     Serial.print(" : ");
     Serial.println(dataPoints[i].m_value);
   }
+  Serial.println("---------");
 }
 
 // Fwd declarations
@@ -65,17 +68,23 @@ TaskManager tasks{buffer};
 
 void setup()
 {
+  Serial.begin(9600);
+  lightSensor.begin();
+  if(!bmeSensor.begin())
+    Serial.println("BME FAILED!");
+
   //tasks.registerTask(&flashTwice, 10000);
   tasks.registerTask([](){ printSensorData(soilSensor); }, 1000);
   tasks.registerTask([](){ printSensorData(bmeSensor); }, 1000);
   tasks.registerTask([](){ printSensorData(uvSensor); }, 1000);
-  tasks.registerTask([](){ Serial.println(""); }, 1000);
+  tasks.registerTask([](){ printSensorData(lightSensor); }, 1000);
+  tasks.registerTask([](){ Serial.println("\n\n\n"); }, 1000);
 
   // tasks.registerTask(&printHello, 1000);
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Serial.begin(9600);
+  
   Serial.println("Hellokidoki");
 }
 
