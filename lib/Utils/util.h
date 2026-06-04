@@ -1,5 +1,10 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <Arduino.h>
 
+#include "Sensor.h"
+#include "logging.h"
 
 namespace mystd
 {
@@ -13,6 +18,24 @@ namespace mystd
     constexpr T &&move(T &&arg) noexcept
     {
         return static_cast<T &&>(arg);
+    }
+}
+
+namespace util
+{
+    template <typename TImpl>
+    void printSensorData(SensorBase<TImpl> &sensor)
+    {
+        DataPoint dataPoints[sensor.size()];
+        // Serial.println(sensor.size());
+        sensor.fillData(dataPoints);
+        for (auto i = 0U; i < sensor.size(); i++)
+        {
+            LOG(dataPoints[i].m_name);
+            LOG(" : ");
+            LOG_LN(dataPoints[i].m_value);
+        }
+        LOG_LN("---------");
     }
 }
 
@@ -31,3 +54,5 @@ namespace CrossBoard
 #endif
     }
 }
+
+#endif // UTILS_H
