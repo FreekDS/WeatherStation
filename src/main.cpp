@@ -5,9 +5,27 @@
 
 #include <Sensor.h>
 #include <BMESensor.h>
+
 #include <SoilMoistureSensor.h>
+#include <UVSensor.h>
+#include <BMESensor.h>
 
 SoilMoistureSensor<PIN_SENSOR_GROUND_HUMIDITY> soilSensor;
+UVSensor<PIN_SENSOR_UV> uvSensor;
+BMESensor<ADDR_SENSOR_BME> bmeSensor;
+
+template <typename TImpl>
+void printSensorData(SensorBase<TImpl>& sensor) {
+  DataPoint dataPoints[sensor.size()];
+  // Serial.println(sensor.size());
+  sensor.fillData(dataPoints);
+  for (auto i = 0U; i < sensor.size(); i++)
+  {
+    Serial.print(dataPoints[i].m_name);
+    Serial.print(" : ");
+    Serial.println(dataPoints[i].m_value);
+  }
+}
 
 // Fwd declarations
 void blink();
@@ -29,14 +47,11 @@ void flashTwice()
 
 void printSoil()
 {
-  DataPoint dataPoints[soilSensor.size()];
-  soilSensor.fillData(dataPoints);
-  for (auto i = 0U; i < soilSensor.size(); i++)
-  {
-    Serial.print(dataPoints[i].m_name);
-    Serial.print(" : ");
-    Serial.println(dataPoints[i].m_value);
-  }
+  printSensorData(soilSensor);
+}
+
+void printUV() {
+  printSensorData(uvSensor);
 }
 
 void printHello()
@@ -50,8 +65,12 @@ TaskManager tasks{buffer};
 
 void setup()
 {
-  tasks.registerTask(&flashTwice, 10000);
-  tasks.registerTask(&printSoil, 1000);
+  //tasks.registerTask(&flashTwice, 10000);
+  tasks.registerTask([](){ printSensorData(soilSensor); }, 1000);
+  tasks.registerTask([](){ printSensorData(bmeSensor); }, 1000);
+  tasks.registerTask([](){ printSensorData(uvSensor); }, 1000);
+  tasks.registerTask([](){ Serial.println(""); }, 1000);
+
   // tasks.registerTask(&printHello, 1000);
 
   pinMode(LED_BUILTIN, OUTPUT);

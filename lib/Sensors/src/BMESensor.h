@@ -3,11 +3,12 @@
 
 #include "I2CSensor.h"
 
-#include "constants.h"
-
-class BMESensor : public I2CSensor<BMESensor, ADDR_SENSOR_BME, 3>
+template <unsigned int ADDRESS>
+class BMESensor : public I2CSensor<BMESensor<ADDRESS>, ADDRESS>
 {
 public:
+    static constexpr auto getSize() -> size_t { return 3; }
+
     void fillData(DataPoint *dataPoints) const
     {
         dataPoints[0] = {

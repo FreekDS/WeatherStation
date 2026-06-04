@@ -8,16 +8,15 @@ struct DataPoint {
     float m_value{0.0};
 };
 
-template <typename TDerived, size_t dataCount = 1>
+template <typename TDerived>
 class SensorBase
 {
-public:
-
-    constexpr auto size() const -> size_t { return dataCount; }
-
-    void fillData(DataPoint* dataPoints) const { return static_cast<const TDerived &>(this).fillData(dataPoints); }
+public: 
+    constexpr auto size() const -> size_t { return TDerived::getSize(); }
+    void fillData(DataPoint* dataPoints) const { static_cast<const TDerived &>(*this).fillData(dataPoints); }
 
 protected:
+    static constexpr size_t getSize() { return 1; }
     SensorBase() = default;
 };
 

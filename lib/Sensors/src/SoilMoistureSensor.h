@@ -7,7 +7,7 @@ template<uint8_t PIN>
 class SoilMoistureSensor : public AnalogSensor<SoilMoistureSensor<PIN>, PIN>
 {
 public:
-    void fillData(DataPoint *dataPoints);
+    void fillData(DataPoint *dataPoints) const;
 };
 
 #include "src/SoilMoistureSensor_impl.h"
