@@ -12,7 +12,6 @@ public:
     bool begin() const;
 
     void fillData(DataPoint *dataPoints) const;
-
 private:
     mutable BH1750 m_bh1750;
 };

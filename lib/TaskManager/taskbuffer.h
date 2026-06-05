@@ -5,6 +5,7 @@
 
 using Task = void (*)();
 
+// Store task metadata to know when it should run.
 struct TaskInfo
 {
     Task m_task;
@@ -12,6 +13,8 @@ struct TaskInfo
     unsigned long m_lastRun{0};
 };
 
+// Provides a safe access pattern into a TaskBuffer.
+// Used in the TaskManager.
 class TaskBufferAccessor
 {
 public:
@@ -28,6 +31,7 @@ private:
     template <size_t>
     friend class TaskBuffer;
 
+    // True of insertion was successful, false if insertion failed (e.g. TaskBuffer is full)
     auto insert(Task func, uint16_t tickRate) -> bool;
     explicit TaskBufferAccessor(TaskInfo *storage, size_t size);
 
@@ -36,6 +40,7 @@ private:
     size_t m_lastStoredIndex{0};
 };
 
+// Simple wrapper around a TaskInfo array of size N
 template <size_t N>
 class TaskBuffer
 {

@@ -1,14 +1,11 @@
 #include <Arduino.h>
-#include <taskmanager.h>
-
 #include "constants.h"
 
+#include <taskmanager.h>
 #include <logging.h>
 #include <util.h>
 
-#include <Sensor.h>
 #include <BMESensor.h>
-
 #include <SoilMoistureSensor.h>
 #include <UVSensor.h>
 #include <BMESensor.h>
@@ -36,13 +33,8 @@ void setup()
   tasks.registerTask([](){ util::printSensorData(bmeSensor); }, 1000);
   tasks.registerTask([](){ util::printSensorData(uvSensor); }, 1000);
   tasks.registerTask([](){ util::printSensorData(lightSensor); }, 1000);
-
-  // tasks.registerTask(&printHello, 1000);
-
-  pinMode(LED_BUILTIN, OUTPUT);
-
   
-  LOG_LN("Hellokidoki");
+  LOG_LN("Hellokidoki, De weerman is wakker");
 }
 
 void loop()
