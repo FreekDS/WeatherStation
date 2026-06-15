@@ -1,10 +1,11 @@
 #include "JsonStreamer.h"
 
 #include <logging.h>
+#include <util.h>
 
 namespace JsonStreamer
 {
-    void streamToSerial(DataPoint *dataPoints, size_t dataPointCount, bool newlines = true)
+    void streamToSerial(const DataPoint *dataPoints, const size_t dataPointCount, bool newlines = true)
     {
         auto printDP = [](const DataPoint &dp)
         {
@@ -27,7 +28,7 @@ namespace JsonStreamer
         LOG_LN('}');
     }
 
-    bool streamToBuffer(DataPoint *dataPoints, size_t numPoints, char *buffer, size_t bufferSize)
+    bool streamToBuffer(const DataPoint *dataPoints, const size_t numPoints, char *buffer, const size_t bufferSize)
     {
         if (buffer == nullptr || dataPoints == nullptr || bufferSize == 0)
             return false;
@@ -52,22 +53,27 @@ namespace JsonStreamer
             return true;
         };
 
-        if (!writeToBuffer("{"))
+        if (!writeToBuffer("["))
             return false;
 
-        // TODO: write sensor values
         for (size_t i = 0; i < numPoints; i++)
         {
             const auto &[name, value] = dataPoints[i];
-            if (!writeToBuffer("%s: %.4f", name, value))
+
+            // Arduino does not support printing floats with %f -_-
+            int valueInts{0};
+            int valueFrac{0};
+            util::decomposeFloat(value, valueInts, valueFrac);
+            
+            if (!writeToBuffer("{\"n\": %s, \"v\": %d.%02d}", name, valueInts, valueFrac))
                 return false;
 
             if (i < numPoints - 1)
-                if (!writeToBuffer(","))
+                if (!writeToBuffer(",\n"))
                     return false;
         }
 
-        if (!writeToBuffer("}"))
+        if (!writeToBuffer("]"))
             return false;
 
         return true;

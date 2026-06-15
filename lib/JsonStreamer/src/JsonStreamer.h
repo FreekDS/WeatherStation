@@ -7,8 +7,8 @@
 
 namespace JsonStreamer
 {
-    void streamToSerial(DataPoint* dataPoints, size_t dataPointCount, bool newlines);
-    bool streamToBuffer(DataPoint *dataPoints, size_t numPoints, char *buffer, size_t bufferSize);
+    void streamToSerial(const DataPoint* dataPoints, const size_t dataPointCount, bool newlines);
+    bool streamToBuffer(const DataPoint *dataPoints, const size_t numPoints, char *buffer, const size_t bufferSize);
 }
 
 #endif // JSON_STREAMER_H

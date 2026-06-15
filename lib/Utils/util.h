@@ -37,6 +37,20 @@ namespace util
         }
         LOG_LN("---------");
     }
+
+    constexpr int ipow10(int exp)
+    {
+        int result = 1;
+        for (int i = 0; i < exp; i++)
+            result *= 10;
+        return result;
+    }
+
+    inline void decomposeFloat(const float input, int &wholeNumbers, int &fraction, uint8_t precision = 2)
+    {
+        wholeNumbers = static_cast<int>(input);
+        fraction = static_cast<int>((input - wholeNumbers) * ipow10(precision));
+    }
 }
 
 namespace CrossBoard
