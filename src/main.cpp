@@ -11,11 +11,17 @@
 #include <BMESensor.h>
 #include <LightSensor.h>
 
+#include <JsonStreamer.h>
+
 // --- Sensors
 SoilMoistureSensor<PIN_SENSOR_GROUND_HUMIDITY> soilSensor;
 UVSensor<PIN_SENSOR_UV> uvSensor;
 BMESensor<ADDR_SENSOR_BME> bmeSensor;
 LightSensor<ADDR_SENSOR_LIGHT> lightSensor;
+
+
+constexpr size_t MEASUREMENT_COUNT = SensorUtil::accumulateSensorSizes(soilSensor, uvSensor, bmeSensor, lightSensor);
+
 
 // -- Internals
 TaskBuffer<10> buffer;

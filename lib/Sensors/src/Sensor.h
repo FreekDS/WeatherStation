@@ -43,4 +43,15 @@ protected:
     static constexpr size_t getSize() { return 1; }
 };
 
+namespace SensorUtil
+{
+    template <typename... TSensors>
+    constexpr auto accumulateSensorSizes(const TSensors &...sensors)
+    {
+        static_assert((__is_base_of(SensorBase<TSensors>, TSensors) && ...));
+        return (sensors.size() + ...);
+    }
+
+}
+
 #endif // SENSOR_H
