@@ -1,8 +1,10 @@
-## WeatherStation
+## Stack only WeatherStation
 
 ### Overview
 
 Simple embedded application for environmental sensing and reporting implemented in modern C++17 for small microcontroller boards. The project collects temperature, humidity, pressure, light, soil moisture, and ultraviolet intensity then formats measurements as JSON for downstream consumption.
+
+No dynamic memory is used: everything lives on the stack ensuring forever uptime!
 
 #### Repository Layout
 
